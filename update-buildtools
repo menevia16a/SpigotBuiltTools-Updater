@@ -1,0 +1,64 @@
+#!/bin/bash
+# Authors: Veil
+
+function asciiLogo
+{
+  version="1.0"
+
+  clear
+  GREEN='\e[32m'
+  WHITE='\e[37m'
+  RED='\e[31m'
+
+  echo ""
+  echo -e "${GREEN}        Veil's Spigot Buildtools"
+  echo -e "${GREEN}                Updater"
+  echo ""
+  echo -e "${WHITE}        Version: $version"
+  echo ""
+}
+
+function runBuildtools ()
+{
+  if [ -f BuildTools.jar ]; then
+    echo -e "\n${WHITE} Running BuildTools.jar...\n"
+    java -jar BuildTools.jar
+    echo -e "\n${GREEN} Finished updating and running Spigot Buildtools! :)\n"
+    exit
+  else
+    echo -e "\n${RED} BuildTools.jar not found!\n"
+    exit
+  fi
+}
+
+function updateBuildtools ()
+{
+  echo -e "\n${GREEN} Updating BuildTools.jar..\n"
+  echo -e "\n${WHITE} Obtaining latest BuildTools.jar from https://hub.spigotmc.org/...\n"
+
+  if [ -f BuildTools.jar ]; then
+    echo -e "\n${RED} Removing old BuildTools.jar...${WHITE}\n"
+    rm BuildTools.jar
+  fi
+
+  wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+  echo -e "\n${GREEN} Ready to run the new BuildTools.jar?\n"
+
+  select qYn in "Yes" "No"; do
+    case $qYn in
+      Yes ) runBuildtools;;
+      No ) exit;;
+    esac
+  done
+}
+
+# main exec
+asciiLogo
+echo -e "\n${GREEN} Would you like to update your BuildTools.jar now?\n"
+
+select qYn in "Yes" "No"; do
+  case $qYn in
+    Yes ) updateBuildtools;;
+    No ) exit;;
+  esac
+done
